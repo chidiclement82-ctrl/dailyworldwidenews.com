@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Newsroom</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { background: var(--bg); }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 64px; }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-bottom: 14px; margin-bottom: 24px; border-bottom: 3px double var(--ink); }
+  .bar h1 { margin: 0 auto 0 0; font-family: var(--serif); font-size: 1.5rem; }
+  .panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 20px; }
+  .narrow { max-width: 420px; margin: 8vh auto 0; }
+  h2 { font-family: var(--serif); margin: 0 0 14px; }
+  label { display: block; margin: 16px 0 6px; font-size: 0.85rem; font-weight: 600; }
+  .hint { font-weight: 400; color: var(--muted); }
+  input[type=text], input[type=email], input[type=password], textarea {
+    width: 100%; padding: 10px 12px; font: inherit; color: var(--ink);
+    background: var(--bg); border: 1px solid var(--rule); border-radius: 6px;
+  }
+  #f-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; }
+  button, .btn {
+    font: inherit; font-size: 0.9rem; font-weight: 600; padding: 9px 14px; cursor: pointer;
+    color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; text-decoration: none;
+  }
+  button:hover, .btn:hover { border-color: var(--ink); }
+  button.primary { color: #fff; background: #b3261e; border-color: #b3261e; }
+  button.primary:hover { background: #8f1d17; border-color: #8f1d17; }
+  button.danger { color: var(--accent); }
+  button.link { border: 0; background: none; padding: 0; color: var(--accent); text-decoration: underline; }
+  button:disabled { opacity: 0.55; cursor: wait; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .actions .spacer { margin-left: auto; }
+  .msg { margin: 14px 0 0; padding: 10px 12px; border-radius: 6px; font-size: 0.9rem; background: var(--bg); border: 1px solid var(--rule); }
+  .msg.err { border-color: var(--accent); color: var(--accent); }
+  .msg:empty { display: none; }
+  .rows { list-style: none; margin: 0; padding: 0; }
+  .rows li { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  .rows li:last-child { border-bottom: 0; }
+  .rows .t { flex: 1; min-width: 0; }
+  .rows .t strong { display: block; font-family: var(--serif); font-size: 1.1rem; overflow-wrap: anywhere; }
+  .rows .t span { color: var(--muted); font-size: 0.85rem; }
+  .pill { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 99px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
+  .pill.live { color: #fff; background: #1f7a3d; border-color: #1f7a3d; }
+  .tools { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border: 1px solid var(--rule); border-bottom: 0; border-radius: 6px 6px 0 0; background: var(--bg); }
+  .tools button { padding: 6px 10px; font-size: 0.85rem; }
+  #f-body { min-height: 320px; padding: 16px; border: 1px solid var(--rule); border-radius: 0 0 6px 6px; background: var(--bg); margin-top: 0; }
+  #f-body:empty::before { content: "Write your story here…"; color: var(--muted); }
+  .cover { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .cover img { width: 160px; aspect-ratio: 16/9; object-fit: cover; border-radius: 6px; border: 1px solid var(--rule); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Sign in / create account -->
+  <section id="v-auth" class="panel narrow" hidden>
+    <h2 id="auth-title">Sign in to your newsroom</h2>
+    <form id="auth-form">
+      <label for="a-email">Email</label>
+      <input id="a-email" type="email" autocomplete="email" required>
+      <label for="a-pass">Password <span class="hint" id="a-pass-hint"></span></label>
+      <input id="a-pass" type="password" autocomplete="current-password" minlength="8" required>
+      <div class="actions"><button class="primary" id="auth-go">Sign in</button></div>
+    </form>
+    <p class="msg" id="auth-msg"></p>
+    <p style="margin:18px 0 0;font-size:.9rem"><button class="link" id="auth-swap" type="button">First time here? Create your editor account</button></p>
+  </section>
+
+  <!-- Messages for states where nothing else can be shown -->
+  <section id="v-note" class="panel narrow" hidden>
+    <h2 id="note-title"></h2>
+    <p id="note-text"></p>
+    <div class="actions"><button id="note-out" hidden>Sign out</button></div>
+  </section>
+
+  <!-- The newsroom -->
+  <div id="v-app" hidden>
+    <div class="bar">
+      <h1>Newsroom</h1>
+      <button id="nav-list">Stories</button>
+      <button id="nav-settings">Settings</button>
+      <a class="btn" href="../" target="_blank" rel="noopener">View site</a>
+      <button id="nav-out">Sign out</button>
+    </div>
+
+    <section id="v-list" hidden>
+      <div class="actions" style="margin:0 0 18px"><button class="primary" id="new-story">Write a new story</button></div>
+      <div class="panel"><ul class="rows" id="rows"></ul></div>
+    </section>
+
+    <section id="v-edit" class="panel" hidden>
+      <label for="f-title" style="margin-top:0">Headline</label>
+      <input id="f-title" type="text" maxlength="160" placeholder="Headline">
+      <label for="f-summary">Summary <span class="hint">one or two sentences shown under the headline and on Google</span></label>
+      <textarea id="f-summary" rows="2" maxlength="300"></textarea>
+      <label for="f-category">Category <span class="hint">for example Politics, Sport, Business</span></label>
+      <input id="f-category" type="text" maxlength="40" list="cats"><datalist id="cats"></datalist>
+      <label for="f-author">Written by</label>
+      <input id="f-author" type="text" maxlength="80">
+      <label>Main picture</label>
+      <div class="cover">
+        <img id="cover-img" alt="" hidden>
+        <button type="button" id="cover-pick">Choose picture</button>
+        <button type="button" id="cover-clear" class="danger" hidden>Remove</button>
+        <input type="file" id="cover-file" accept="image/*" hidden>
+      </div>
+      <label for="f-cover-alt">Picture description <span class="hint">what the picture shows, for readers who cannot see it</span></label>
+      <input id="f-cover-alt" type="text" maxlength="200">
+      <label id="body-label">Story</label>
+      <div class="tools" role="toolbar" aria-label="Formatting">
+        <button type="button" data-cmd="bold"><b>Bold</b></button>
+        <button type="button" data-cmd="italic"><i>Italic</i></button>
+        <button type="button" data-block="h2">Heading</button>
+        <button type="button" data-block="blockquote">Quote</button>
+        <button type="button" data-block="p">Normal</button>
+        <button type="button" data-cmd="insertUnorderedList">List</button>
+        <button type="button" data-cmd="insertOrderedList">Numbered</button>
+        <button type="button" id="tool-link">Link</button>
+        <button type="button" id="tool-img">Picture</button>
+        <input type="file" id="body-file" accept="image/*" hidden>
+      </div>
+      <div id="f-body" class="story-body" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="body-label"></div>
+      <p class="msg" id="edit-msg"></p>
+      <div class="actions">
+        <button class="primary" id="save-publish">Publish</button>
+        <button id="save-draft">Save as draft</button>
+        <button id="edit-back">Back</button>
+        <span class="spacer"></span>
+        <button class="danger" id="edit-delete" hidden>Delete story</button>
+      </div>
+    </section>
+
+    <section id="v-settings" hidden>
+      <div class="panel">
+        <h2>Your site</h2>
+        <label for="s-name" style="margin-top:0">Site name</label>
+        <input id="s-name" type="text" maxlength="60">
+        <label for="s-tagline">Tagline</label>
+        <input id="s-tagline" type="text" maxlength="120">
+        <label for="s-author">Your name <span class="hint">filled in automatically on new stories</span></label>
+        <input id="s-author" type="text" maxlength="80">
+        <label for="s-google">Google verification code <span class="hint">from Google Search Console, optional</span></label>
+        <input id="s-google" type="text" maxlength="300">
+        <p class="msg" id="settings-msg"></p>
+        <div class="actions"><button class="primary" id="settings-save">Save settings</button></div>
+      </div>
+      <div class="panel" style="margin-top:20px">
+        <h2>Change password</h2>
+        <label for="p-new" style="margin-top:0">New password <span class="hint">at least 8 characters</span></label>
+        <input id="p-new" type="password" autocomplete="new-password" minlength="8">
+        <p class="msg" id="pass-msg"></p>
+        <div class="actions"><button id="pass-save">Change password</button></div>
+      </div>
+    </section>
+  </div>
+</div>
+<script type="module" src="admin.js"></script>
+</body>
+</html>

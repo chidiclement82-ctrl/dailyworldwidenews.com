@@ -1,0 +1,7 @@
+{
+  "name": "news-site",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node build.mjs" },
+  "dependencies": { "sanitize-html": "^2.13.0" }
+}
