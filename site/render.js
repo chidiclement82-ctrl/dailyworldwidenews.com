@@ -164,9 +164,6 @@ ${ld}
 <main id="main">
 ${o.main}
 </main>
-<footer class="footer">
-  <p>© ${new Date().getUTCFullYear()} <span data-site-name>${esc(s.site_name)}</span> · <a href="${base}/rss.xml">RSS</a> · <a href="${base}/admin/" rel="nofollow">Editor login</a></p>
-</footer>
 </body>
 </html>
 `;
