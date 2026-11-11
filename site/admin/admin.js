@@ -94,7 +94,11 @@ async function enter() {
   const { data: isEditor, error } = await db.rpc("claim_admin");
   if (error) return note("Something went wrong", error.message, true);
   if (!isEditor) {
-    return note("Not the editor", "This site already has an editor, and it is not this account.", true);
+    return note(
+      "Not the editor",
+      "This site already has an editor, and it is not this account. Sign out, then sign in with the email you used the very first time.",
+      true,
+    );
   }
   showView("v-app");
   await Promise.all([loadSettings(), loadPosts()]);
@@ -349,6 +353,11 @@ $("pass-save").onclick = (e) =>
   });
 
 // ---- Start ------------------------------------------------------------------
+// Once the site has its editor, the page is a plain email-and-password
+// sign-in: creating further accounts would only cause confusion.
+db.rpc("has_editor").then(({ data: exists }) => {
+  if (exists) $("auth-swap").hidden = true;
+});
 const { data } = await db.auth.getSession();
 if (data.session) enter();
 else showView("v-auth");

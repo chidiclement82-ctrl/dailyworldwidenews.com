@@ -95,3 +95,12 @@ create policy "Editor can upload pictures" on storage.objects
   for insert to authenticated with check (bucket_id = 'media' and (select public.is_admin()));
 create policy "Editor can delete pictures" on storage.objects
   for delete to authenticated using (bucket_id = 'media' and (select public.is_admin()));
+
+-- Lets the sign-in page know whether the site already has its editor, so it
+-- only offers "create account" on a brand new site. Reveals nothing else.
+create function public.has_editor() returns boolean
+language sql stable security definer set search_path = '' as $$
+  select exists (select 1 from public.admins);
+$$;
+revoke execute on function public.has_editor() from public;
+grant execute on function public.has_editor() to anon, authenticated;
