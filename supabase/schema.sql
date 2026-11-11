@@ -46,6 +46,7 @@ create table public.posts (
   author text not null default '',
   cover_url text not null default '',
   cover_alt text not null default '',
+  cover_credit text not null default '',
   status text not null default 'draft' check (status in ('draft', 'published')),
   published_at timestamptz,
   created_at timestamptz not null default now(),

@@ -157,6 +157,7 @@ main { max-width: 1080px; margin: 0 auto; padding: 28px 16px 48px; min-height: 5
 .story-head .meta { padding: 14px 0; margin-top: 18px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
 .story-cover { margin: 24px 0 0; }
 .story-cover img { width: 100%; }
+.story-cover figcaption { margin-top: 6px; color: var(--muted); font-size: 0.78rem; }
 .story-body { margin-top: 24px; font-family: var(--serif); font-size: 1.16rem; line-height: 1.7; overflow-wrap: break-word; }
 .story-body p { margin: 0 0 1.1em; }
 .story-body h2, .story-body h3 { margin: 1.6em 0 0.5em; line-height: 1.25; }

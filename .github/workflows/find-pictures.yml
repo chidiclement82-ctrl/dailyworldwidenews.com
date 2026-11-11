@@ -1,0 +1,20 @@
+name: Find pictures
+
+# Looks up the freely licensed lead photo on each person's Wikipedia page.
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          set +e
+          UA="news-site-picture-lookup/1.0"
+          for T in "Beyoncé" "Taylor_Swift" "Kendrick_Lamar" "Adele" "Billie_Eilish" "Ed_Sheeran" "Michelle_Yeoh" "Cillian_Murphy"; do
+            F=$(curl -sS -A "$UA" -G "https://en.wikipedia.org/w/api.php" --data-urlencode "action=query" --data-urlencode "format=json" --data-urlencode "prop=pageimages" --data-urlencode "piprop=name" --data-urlencode "titles=$T" | jq -r '.query.pages[].pageimage')
+            echo "@@ $T => $F"
+            curl -sS -A "$UA" -G "https://commons.wikimedia.org/w/api.php" --data-urlencode "action=query" --data-urlencode "format=json" --data-urlencode "prop=imageinfo" --data-urlencode "iiprop=url|size|extmetadata" --data-urlencode "iiurlwidth=1280" --data-urlencode "iiextmetadatafilter=LicenseShortName|Artist|ImageDescription|DateTimeOriginal" --data-urlencode "titles=File:$F" | jq -c '.query.pages[].imageinfo[0] | {thumburl, thumbwidth, thumbheight, descriptionurl, lic: .extmetadata.LicenseShortName.value, artist: .extmetadata.Artist.value, desc: .extmetadata.ImageDescription.value, date: .extmetadata.DateTimeOriginal.value}' | sed 's/^/@@ /'
+          done

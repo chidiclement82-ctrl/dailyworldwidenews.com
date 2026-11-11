@@ -102,7 +102,7 @@ export function articleMain(post, bodyHtml, more, base, siteUrl) {
     ${post.summary ? `<p class="deck">${esc(post.summary)}</p>` : ""}
     <p class="meta">${post.author ? `By <strong>${esc(post.author)}</strong> · ` : ""}<time datetime="${esc(post.published_at)}">${fmtDate(post.published_at)}</time></p>
   </header>
-  ${post.cover_url ? `<figure class="story-cover"><img src="${esc(post.cover_url)}" alt="${esc(post.cover_alt)}"></figure>` : ""}
+  ${post.cover_url ? `<figure class="story-cover"><img src="${esc(post.cover_url)}" alt="${esc(post.cover_alt)}">${post.cover_credit ? `<figcaption>${esc(post.cover_credit)}</figcaption>` : ""}</figure>` : ""}
   <div class="story-body">${bodyHtml}</div>
   <p class="share">Share:
     <a href="https://wa.me/?text=${text}%20${share}" target="_blank" rel="noopener">WhatsApp</a>

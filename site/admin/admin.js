@@ -162,6 +162,7 @@ async function openEditor(id) {
   $("f-category").value = p.category ?? "";
   $("f-author").value = p.author ?? settings.author ?? "";
   $("f-cover-alt").value = p.cover_alt ?? "";
+  $("f-cover-credit").value = p.cover_credit ?? "";
   $("f-body").innerHTML = DOMPurify.sanitize(p.body ?? "", { ALLOWED_TAGS, ALLOWED_ATTR });
   setCover(p.cover_url);
   $("cats").innerHTML = categoriesOf(posts).map((c) => `<option value="${esc(c.name)}">`).join("");
@@ -269,6 +270,7 @@ async function save(status, button) {
     author: $("f-author").value.trim(),
     cover_url: coverUrl,
     cover_alt: $("f-cover-alt").value.trim(),
+    cover_credit: $("f-cover-credit").value.trim(),
     body: html,
     status,
     updated_at: now,
