@@ -12,12 +12,13 @@ jobs:
     steps:
       - name: Look up DNS and open the site
         run: |
+          set +e
           D=dailyworldwordnews.com
-          echo "== Nameservers"; dig +short NS $D
-          echo "== A records (want 185.199.108-111.153)"; dig +short A $D
-          echo "== A via 8.8.8.8"; dig +short A $D @8.8.8.8
-          echo "== www"; dig +short www.$D
-          for ns in $(dig +short NS $D); do echo "== asking $ns"; dig +short A $D @$ns; dig +short www.$D @$ns; done
+          echo "== Nameservers"; dig +short +time=5 +tries=2 NS $D
+          echo "== A records (want 185.199.108-111.153)"; dig +short +time=5 +tries=2 A $D
+          echo "== A via 8.8.8.8"; dig +short +time=5 +tries=2 A $D @8.8.8.8
+          echo "== www"; dig +short +time=5 +tries=2 www.$D
+          for ns in $(dig +short +time=5 +tries=2 NS $D); do echo "== asking $ns"; dig +short +time=5 +tries=2 A $D @$ns; dig +short +time=5 +tries=2 www.$D @$ns; done
           echo "== http";  curl -sS -m 20 -o /dev/null -w "%{http_code} server=%header{server}\n" http://$D/ || true
           echo "== https"; curl -sS -m 20 -o /dev/null -w "%{http_code}\n" https://$D/ || true
           echo "== title"; curl -sS -m 20 -L http://$D/ | grep -o "<title>[^<]*" | head -1 || true
