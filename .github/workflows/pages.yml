@@ -11,6 +11,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: write
 
 concurrency:
   group: pages
@@ -40,3 +41,9 @@ jobs:
           path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
+      # GitHub switches off hourly schedules in repositories that go 60 days
+      # without changes. Re-enabling the workflow on each run keeps it going.
+      - name: Keep the hourly schedule alive
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/pages.yml/enable"
+        env:
+          GH_TOKEN: ${{ github.token }}
