@@ -100,7 +100,7 @@ export function articleMain(post, bodyHtml, more, base, siteUrl) {
     ${post.category ? `<a class="kicker" href="${catUrl(base, post.category)}">${esc(post.category)}</a>` : ""}
     <h1>${esc(post.title)}</h1>
     ${post.summary ? `<p class="deck">${esc(post.summary)}</p>` : ""}
-    <p class="meta">${post.author ? `By <strong>${esc(post.author)}</strong> · ` : ""}<time datetime="${esc(post.published_at)}">${fmtDate(post.published_at)}</time></p>
+    <p class="meta">${post.author ? `By <strong>${esc(post.author.replace(/^by\s+/i, ""))}</strong> · ` : ""}<time datetime="${esc(post.published_at)}">${fmtDate(post.published_at)}</time></p>
   </header>
   ${post.cover_url ? `<figure class="story-cover"><img src="${esc(post.cover_url)}" alt="${esc(post.cover_alt)}">${post.cover_credit ? `<figcaption>${esc(post.cover_credit)}</figcaption>` : ""}</figure>` : ""}
   <div class="story-body">${bodyHtml}</div>
