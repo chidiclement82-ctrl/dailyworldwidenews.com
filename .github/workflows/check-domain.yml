@@ -1,0 +1,23 @@
+name: Check domain
+
+# Run by hand to see whether the domain points at GitHub Pages yet.
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Look up DNS and open the site
+        run: |
+          D=dailyworldwordnews.com
+          echo "== Nameservers"; dig +short NS $D
+          echo "== A records (want 185.199.108-111.153)"; dig +short A $D
+          echo "== A via 8.8.8.8"; dig +short A $D @8.8.8.8
+          echo "== www"; dig +short www.$D
+          for ns in $(dig +short NS $D); do echo "== asking $ns"; dig +short A $D @$ns; dig +short www.$D @$ns; done
+          echo "== http";  curl -sS -m 20 -o /dev/null -w "%{http_code} server=%header{server}\n" http://$D/ || true
+          echo "== https"; curl -sS -m 20 -o /dev/null -w "%{http_code}\n" https://$D/ || true
+          echo "== title"; curl -sS -m 20 -L http://$D/ | grep -o "<title>[^<]*" | head -1 || true
