@@ -113,6 +113,11 @@ export function articleMain(post, bodyHtml, more, base, siteUrl) {
 ${more.length ? `<section class="more"><h2 class="section-head">More stories</h2><div class="grid">${more.map((p) => card(p, base)).join("\n")}</div></section>` : ""}`;
 }
 
+/** Shown for the moment before stories arrive on a page built without them. */
+export function loadingMain() {
+  return `<p class="empty" role="status">Loading the latest stories…</p>`;
+}
+
 export function notFoundMain(base) {
   return `<div class="empty"><h1>Page not found</h1><p>That story may have been moved or removed.</p><p><a href="${base}/">Back to the front page</a></p></div>`;
 }

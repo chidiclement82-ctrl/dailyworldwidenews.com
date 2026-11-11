@@ -71,8 +71,8 @@ await out(
     ...common,
     pageType: "home",
     path: "/",
-    sig: R.sigOf(posts),
-    main: R.homeMain(posts, base),
+    sig: posts.length ? R.sigOf(posts) : "loading",
+    main: posts.length ? R.homeMain(posts, base) : R.loadingMain(),
     jsonLd: { "@context": "https://schema.org", "@type": "WebSite", name: settings.site_name, url: `${siteUrl}/` },
   }),
 );
@@ -132,7 +132,7 @@ for (const c of categories) {
 // Fallback page: also shows stories published since the last build.
 await out(
   "404.html",
-  R.page({ ...common, pageType: "404", path: null, title: "Not found", sig: "none", main: R.notFoundMain(base) }),
+  R.page({ ...common, pageType: "404", path: null, title: "", sig: "loading", main: R.loadingMain() }),
 );
 
 // Sitemap, RSS, robots
