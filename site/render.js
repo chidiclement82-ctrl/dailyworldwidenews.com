@@ -124,6 +124,9 @@ export function navHtml(posts, base) {
     .join("")}`;
 }
 
+// The emblem: a serif "i" whose dot is a star, inside a ring.
+const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2"/><path fill="currentColor" d="M22 28h13v18h6v4H23v-4h5V32h-6z"/><path class="brand-star" d="M31.5 8C32.6 15 34.5 16.900 41.500 18C34.5 19.100 32.600 21 31.5 28C30.400 21 28.500 19.100 21.500 18C28.500 16.900 30.400 15 31.5 8Z"/></svg>`;
+
 /** A complete HTML document. Used by the build script only. */
 export function page(o) {
   const s = o.settings;
@@ -151,13 +154,22 @@ ${o.image ? `<meta property="og:image" content="${esc(o.image)}">` : ""}
 <meta name="twitter:card" content="${o.image ? "summary_large_image" : "summary"}">
 ${s.google_verification ? `<meta name="google-site-verification" content="${esc(s.google_verification)}">` : ""}
 <link rel="alternate" type="application/rss+xml" title="${esc(s.site_name)}" href="${base}/rss.xml">
+<link rel="icon" type="image/svg+xml" href="${base}/logo.svg">
+<link rel="apple-touch-icon" href="${base}/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&display=swap">
 <link rel="stylesheet" href="${base}/styles.css">
 ${ld}
 <script type="module" src="${base}/live.js"></script>
 </head>
 <body>
 <header class="masthead">
-  <a class="site-name" href="${base}/" data-site-name>${esc(s.site_name)}</a>
+  <p class="dateline" data-today>&nbsp;</p>
+  <a class="brand" href="${base}/">
+    ${BRAND_MARK}
+    <span class="site-name" data-site-name>${esc(s.site_name)}</span>
+  </a>
   <p class="tagline" data-tagline>${esc(s.tagline)}</p>
   <nav class="nav" aria-label="Sections" data-nav>${navHtml(o.posts, base)}</nav>
 </header>
