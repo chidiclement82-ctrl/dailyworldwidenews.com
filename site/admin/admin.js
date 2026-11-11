@@ -327,7 +327,7 @@ $("settings-save").onclick = (e) =>
     const pasted = $("s-google").value.trim();
     const code = pasted.match(/content=["']([^"']+)["']/i)?.[1] ?? pasted;
     const row = {
-      site_name: $("s-name").value.trim() || "My News",
+      site_name: $("s-name").value.trim() || "ICONDAILY",
       tagline: $("s-tagline").value.trim(),
       author: $("s-author").value.trim(),
       google_verification: code.replace(/[^\w-]/g, ""),

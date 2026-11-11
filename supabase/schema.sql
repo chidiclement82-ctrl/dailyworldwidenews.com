@@ -71,8 +71,8 @@ grant insert, update, delete on public.posts to authenticated;
 -- Site settings (a single row) -----------------------------------------------
 create table public.settings (
   id int primary key default 1 check (id = 1),
-  site_name text not null default 'My News',
-  tagline text not null default 'Independent news and reporting',
+  site_name text not null default 'ICONDAILY',
+  tagline text not null default 'Global Celebrity news, entertainment and culture',
   author text not null default '',
   google_verification text not null default ''
 );

@@ -2,8 +2,8 @@
 // Everything here returns HTML strings and touches no DOM.
 
 export const DEFAULT_SETTINGS = {
-  site_name: "My News",
-  tagline: "Independent news and reporting",
+  site_name: "ICONDAILY",
+  tagline: "Global Celebrity news, entertainment and culture",
   author: "",
   google_verification: "",
 };
