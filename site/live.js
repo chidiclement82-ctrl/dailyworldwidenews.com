@@ -34,12 +34,6 @@ function show(html, sig, title) {
   if (title) document.title = title;
 }
 
-document.querySelectorAll("[data-today]").forEach((el) => {
-  el.textContent = new Intl.DateTimeFormat("en-GB", {
-    weekday: "long", day: "numeric", month: "long", year: "numeric",
-  }).format(new Date());
-});
-
 // The last stories seen are kept on the visitor's device, so the next page
 // can be drawn at once while the fresh copy loads.
 const cache = {

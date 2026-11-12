@@ -170,7 +170,6 @@ ${ld}
 </head>
 <body>
 <header class="masthead">
-  <p class="dateline" data-today>&nbsp;</p>
   <a class="brand" href="${base}/">
     ${BRAND_MARK}
     <span class="site-name" data-site-name>${esc(s.site_name)}</span>

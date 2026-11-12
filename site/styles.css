@@ -42,18 +42,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .masthead {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 14px 16px 0;
+  padding: 28px 16px 0;
   text-align: center;
-}
-.dateline {
-  margin: 0 0 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--rule);
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 .brand {
   display: inline-flex;
