@@ -4,7 +4,7 @@
 //   SITE_URL   full address of the site, e.g. https://example.com
 //   BASE_PATH  folder the site is served from ("" or "/repo-name")
 //   POSTS_FILE optional JSON file of posts, for testing without a database
-import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sanitizeHtml from "sanitize-html";
@@ -57,10 +57,40 @@ async function out(file, content) {
 
 const xml = (s) => R.esc(s);
 
-const { posts, settings } = await load();
+// Stories kept as files in the repository, used when the database cannot be
+// reached to save them. Each file is one story with the same fields.
+async function loadFileStories() {
+  const dir = path.join(here, "content", "stories");
+  let names = [];
+  try {
+    names = (await readdir(dir)).filter((n) => n.endsWith(".json"));
+  } catch {
+    return [];
+  }
+  const stories = [];
+  for (const name of names) {
+    const s = JSON.parse(await readFile(path.join(dir, name), "utf8"));
+    if (!s.slug || !s.title || !s.published_at) throw new Error(`Story file ${name} is missing slug, title or published_at`);
+    stories.push({
+      summary: "", body: "", category: "", author: "", cover_url: "", cover_alt: "", cover_credit: "",
+      ...s,
+      id: `file-${s.slug}`,
+      status: "published",
+      updated_at: s.updated_at || s.published_at,
+    });
+  }
+  return stories;
+}
+
+const loaded = await load();
+const settings = loaded.settings;
+const fileStories = await loadFileStories();
+const posts = R.mergePosts(loaded.posts, fileStories);
 await rm(dist, { recursive: true, force: true });
 await cp(path.join(here, "site"), dist, { recursive: true });
 await out(".nojekyll", "");
+// The browser reads this to keep file stories on screen when it refreshes.
+await out("stories.json", JSON.stringify(fileStories));
 
 const common = { settings, base, siteUrl, posts };
 

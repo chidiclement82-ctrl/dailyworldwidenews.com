@@ -105,7 +105,16 @@ async function run() {
   if (r.type === "article") {
     wanted.push(api(`posts?select=*&status=eq.published&slug=eq.${encodeURIComponent(r.key)}&limit=1`));
   }
-  const [posts, settingsRows, postRows] = await Promise.all(wanted);
+  const fileStories = fetch(`${base}/stories.json`, { cache: "no-cache" })
+    .then((res) => (res.ok ? res.json() : []))
+    .catch(() => []);
+  const [dbPosts, settingsRows, postRows = []] = await Promise.all(wanted);
+  const extra = await fileStories;
+  const posts = R.mergePosts(dbPosts, extra);
+  if (r.type === "article" && !postRows.length) {
+    const fromFile = extra.find((p) => p.slug === r.key);
+    if (fromFile) postRows.push(fromFile);
+  }
   const settings = { ...R.DEFAULT_SETTINGS, ...(settingsRows[0] ?? {}) };
   cache.set("list", { posts, settings });
   paintChrome(posts, settings);

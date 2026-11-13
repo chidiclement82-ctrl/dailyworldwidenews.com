@@ -60,6 +60,18 @@ export function categoriesOf(posts) {
   return [...seen].map(([slug, name]) => ({ slug, name }));
 }
 
+/**
+ * Stories can also live as files in the repository (content/stories). This
+ * joins them with the stories from the database, newest first. A database
+ * story wins if both have the same address.
+ */
+export function mergePosts(dbPosts, filePosts) {
+  const seen = new Set(dbPosts.map((p) => p.slug));
+  return [...dbPosts, ...filePosts.filter((p) => !seen.has(p.slug))].sort((a, b) =>
+    String(b.published_at).localeCompare(String(a.published_at)),
+  );
+}
+
 /** A fingerprint of what a page shows, so the browser only redraws on change. */
 export const sigOf = (posts) => posts.map((p) => p.id + p.updated_at).join("|");
 
